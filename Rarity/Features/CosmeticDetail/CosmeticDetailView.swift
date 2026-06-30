@@ -10,7 +10,7 @@ struct CosmeticDetailView: View {
 
     init(cosmeticID: String) {
         self.cosmeticID = cosmeticID
-        _vm = StateObject(wrappedValue: CosmeticDetailViewModel(cosmeticID: cosmeticID, api: APIClient()))
+        _vm = StateObject(wrappedValue: CosmeticDetailViewModel(cosmeticID: cosmeticID, api: APIClient.shared))
     }
 
     var body: some View {

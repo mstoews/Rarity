@@ -21,7 +21,7 @@ struct StoresView: View {
     @StateObject private var vm: StoresViewModel
     @State private var searchQuery = ""
 
-    init() { _vm = StateObject(wrappedValue: StoresViewModel(api: APIClient())) }
+    init() { _vm = StateObject(wrappedValue: StoresViewModel(api: APIClient.shared)) }
 
     private var filtered: [StoreCard] {
         guard !searchQuery.isEmpty else { return vm.stores }

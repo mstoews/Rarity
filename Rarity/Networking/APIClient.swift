@@ -1,6 +1,8 @@
 import Foundation
 
 final class APIClient {
+    static let shared = APIClient()
+
     let baseURL: URL
     var tokenProvider: () -> String? = { nil }
     var tokenRefresher: () async -> Bool = { false }

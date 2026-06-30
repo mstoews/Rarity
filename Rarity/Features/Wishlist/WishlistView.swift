@@ -27,7 +27,7 @@ struct WishlistView: View {
     @StateObject private var vm: WishlistViewModel
     @State private var showPaywall = false
 
-    init() { _vm = StateObject(wrappedValue: WishlistViewModel(api: APIClient())) }
+    init() { _vm = StateObject(wrappedValue: WishlistViewModel(api: APIClient.shared)) }
 
     var body: some View {
         NavigationStack {

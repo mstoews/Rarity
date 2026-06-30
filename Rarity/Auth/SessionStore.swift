@@ -15,7 +15,7 @@ final class SessionStore: ObservableObject {
     @Published var isWorking = false
 
     private static let userKey = "rarity.cachedUser"
-    let api = APIClient()
+    let api = APIClient.shared
 
     private var tokens: StoredTokens? { didSet { isAuthenticated = tokens != nil } }
 

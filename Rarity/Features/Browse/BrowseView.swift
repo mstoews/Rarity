@@ -6,7 +6,7 @@ struct BrowseView: View {
     @StateObject private var vm: BrowseViewModel
     @State private var showPaywall = false
 
-    init() { _vm = StateObject(wrappedValue: BrowseViewModel(api: APIClient())) }
+    init() { _vm = StateObject(wrappedValue: BrowseViewModel(api: APIClient.shared)) }
 
     var body: some View {
         NavigationStack {

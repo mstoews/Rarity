@@ -25,7 +25,7 @@ struct StoreDetailView: View {
 
     init(storeID: String) {
         self.storeID = storeID
-        _vm = StateObject(wrappedValue: StoreDetailViewModel(storeID: storeID, api: APIClient()))
+        _vm = StateObject(wrappedValue: StoreDetailViewModel(storeID: storeID, api: APIClient.shared))
     }
 
     var body: some View {
