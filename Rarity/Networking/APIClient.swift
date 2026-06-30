@@ -19,15 +19,6 @@ final class APIClient {
 
     // MARK: - Auth
 
-    func register(email: String, password: String, username: String) async throws -> LoginResponse {
-        try await send(path: "/auth/register", method: "POST",
-                       body: RegisterBody(email: email, password: password, username: username),
-                       authorized: false)
-    }
-    func login(email: String, password: String) async throws -> LoginResponse {
-        try await send(path: "/auth/login", method: "POST",
-                       body: LoginBody(email: email, password: password), authorized: false)
-    }
     func appleSignIn(identityToken: String, email: String?) async throws -> LoginResponse {
         try await send(path: "/auth/apple", method: "POST",
                        body: AppleSignInBody(identityToken: identityToken, email: email),
@@ -184,8 +175,6 @@ final class APIClient {
 
 // MARK: - Bodies
 
-private struct RegisterBody: Encodable { let email, password, username: String }
-private struct LoginBody: Encodable { let email, password: String }
 private struct AppleSignInBody: Encodable {
     let identityToken: String; let email: String?
     enum CodingKeys: String, CodingKey { case identityToken = "identity_token"; case email }

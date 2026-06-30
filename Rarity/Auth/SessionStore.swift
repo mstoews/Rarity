@@ -12,7 +12,7 @@ final class SessionStore: ObservableObject {
     @Published private(set) var subscription: SubscriptionStatus?
     @Published private(set) var isAuthenticated = false
     @Published var authError: String?
-    @Published var isWorking = false
+    @Published private(set) var isWorking = false
 
     private static let userKey = "rarity.cachedUser"
     let api = APIClient.shared
@@ -34,16 +34,6 @@ final class SessionStore: ObservableObject {
 
     // MARK: - Auth
 
-    func register(email: String, password: String, username: String) async {
-        authError = nil; isWorking = true; defer { isWorking = false }
-        do { apply(try await api.register(email: email, password: password, username: username)) }
-        catch { authError = msg(error) }
-    }
-    func login(email: String, password: String) async {
-        authError = nil; isWorking = true; defer { isWorking = false }
-        do { apply(try await api.login(email: email, password: password)) }
-        catch { authError = msg(error) }
-    }
     func signInWithApple(identityToken: String, email: String?) async {
         authError = nil; isWorking = true; defer { isWorking = false }
         do { apply(try await api.appleSignIn(identityToken: identityToken, email: email)) }
