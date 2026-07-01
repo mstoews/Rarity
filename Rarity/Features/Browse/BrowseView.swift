@@ -11,13 +11,12 @@ struct BrowseView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Category chips
+                // Category chips stay pinned below nav
                 if !vm.categories.isEmpty {
                     CategoryChips(categories: vm.categories, selected: $vm.selectedCategoryID)
                         .onChange(of: vm.selectedCategoryID) { Task { await vm.loadInitial() } }
+                    Rectangle().fill(Theme.separator).frame(height: 0.5)
                 }
-
-                Divider().overlay(Theme.separator)
 
                 Group {
                     if vm.cosmetics.isEmpty && vm.isLoading {
@@ -25,31 +24,53 @@ struct BrowseView: View {
                     } else if let err = vm.error, vm.cosmetics.isEmpty {
                         ContentUnavailableView(err, systemImage: "exclamationmark.triangle")
                     } else if vm.cosmetics.isEmpty {
-                        ContentUnavailableView("No products found", systemImage: "sparkles",
-                                              description: Text("Try a different category or search term."))
+                        ContentUnavailableView(
+                            "No products found",
+                            systemImage: "sparkles",
+                            description: Text("Try a different category or search term.")
+                        )
                     } else {
                         ScrollView {
-                            LazyVStack(spacing: 10) {
-                                ForEach(vm.cosmetics) { cosmetic in
-                                    cosmeticRow(cosmetic)
-                                        .onAppear {
-                                            if cosmetic.id == vm.cosmetics.last?.id {
-                                                Task { await vm.loadMore() }
+                            VStack(alignment: .leading, spacing: 20) {
+                                // Screen title
+                                Text("Discover")
+                                    .font(.atelierDisplay)
+                                    .foregroundStyle(Theme.ink)
+                                    .padding(.horizontal, Metrics.page)
+                                    .padding(.top, 8)
+
+                                // Editorial hero
+                                featuredHero
+
+                                // 2-column product grid
+                                LazyVGrid(
+                                    columns: [GridItem(.flexible()), GridItem(.flexible())],
+                                    spacing: Metrics.listGap
+                                ) {
+                                    ForEach(vm.cosmetics) { cosmetic in
+                                        cosmeticCell(cosmetic)
+                                            .onAppear {
+                                                if cosmetic.id == vm.cosmetics.last?.id {
+                                                    Task { await vm.loadMore() }
+                                                }
                                             }
-                                        }
+                                    }
                                 }
-                                if vm.isLoading { ProgressView().padding() }
+                                .padding(.horizontal, Metrics.page)
+
+                                if vm.isLoading {
+                                    ProgressView().frame(maxWidth: .infinity).padding()
+                                }
                             }
-                            .padding(.horizontal, Metrics.page)
-                            .padding(.vertical, 12)
+                            .padding(.bottom, 20)
                         }
                         .refreshable { await vm.loadInitial() }
                     }
                 }
             }
             .background(Theme.page.ignoresSafeArea())
-            .navigationTitle("Discover")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationTitle("Rarity")
+            .navigationBarTitleDisplayMode(.inline)
             .searchable(text: $vm.searchQuery, prompt: "Search cosmetics, brands…")
             .onChange(of: vm.searchQuery) { vm.onSearchChange() }
             .sheet(isPresented: $showPaywall) {
@@ -62,16 +83,40 @@ struct BrowseView: View {
         }
     }
 
+    // Static editorial card — "The Edit"
+    private var featuredHero: some View {
+        ZStack(alignment: .bottomLeading) {
+            LinearGradient(
+                colors: [Color(hex: 0xEFD9DD), Color(hex: 0xE7D4CB)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .frame(maxWidth: .infinity)
+            .frame(height: 168)
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("The Edit")
+                    .eyebrowStyle()
+                Text("Rare finds for\nquiet rituals")
+                    .font(.cormorant(size: 25))
+                    .foregroundStyle(Theme.ink)
+            }
+            .padding(18)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: Metrics.radiusCard))
+        .padding(.horizontal, Metrics.page)
+    }
+
     @ViewBuilder
-    private func cosmeticRow(_ cosmetic: CosmeticCard) -> some View {
+    private func cosmeticCell(_ cosmetic: CosmeticCard) -> some View {
         if session.isSubscribed {
             NavigationLink(destination: CosmeticDetailView(cosmeticID: cosmetic.id)) {
-                CosmeticCardView(cosmetic: cosmetic, isSubscribed: true)
+                CosmeticGridCard(cosmetic: cosmetic, isSubscribed: true)
             }
             .buttonStyle(.plain)
         } else {
             Button { showPaywall = true } label: {
-                CosmeticCardView(cosmetic: cosmetic, isSubscribed: false)
+                CosmeticGridCard(cosmetic: cosmetic, isSubscribed: false)
             }
             .buttonStyle(.plain)
         }

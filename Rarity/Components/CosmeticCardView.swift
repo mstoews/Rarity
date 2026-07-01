@@ -10,51 +10,57 @@ struct CosmeticCardView: View {
             AsyncImage(url: cosmetic.imageURL.flatMap(URL.init)) { img in
                 img.resizable().scaledToFill()
             } placeholder: {
-                RoundedRectangle(cornerRadius: 10)
+                RoundedRectangle(cornerRadius: Metrics.radiusTile)
                     .fill(Theme.card2)
-                    .overlay(Image(systemName: "sparkles").foregroundStyle(Theme.hint))
+                    .overlay(
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 16, weight: .light))
+                            .foregroundStyle(Theme.hint)
+                    )
             }
-            .frame(width: 72, height: 72)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .frame(width: 66, height: 66)
+            .clipShape(RoundedRectangle(cornerRadius: Metrics.radiusTile))
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 if let cat = cosmetic.category {
-                    Text(cat.name.uppercased())
-                        .font(.system(size: 10, weight: .semibold))
+                    Text(cat.name)
+                        .font(.jost(.semibold, size: 9))
+                        .tracking(1.5)
+                        .textCase(.uppercase)
                         .foregroundStyle(Theme.brand)
-                        .kerning(0.5)
                 }
                 Text(cosmetic.name)
-                    .font(.subheadline.bold())
+                    .font(.atelierCardName)
                     .foregroundStyle(Theme.ink)
                     .lineLimit(2)
                 Text(cosmetic.brand)
-                    .font(.footnote)
+                    .font(.jost(size: 12))
                     .foregroundStyle(Theme.sub)
 
-                if isSubscribed, let avg = cosmetic.avgRating, let count = cosmetic.reviewCount, count > 0 {
+                if isSubscribed, let avg = cosmetic.avgRating,
+                   let count = cosmetic.reviewCount, count > 0 {
                     HStack(spacing: 4) {
                         StarRatingView(rating: avg, size: 11)
-                        Text("(\(count))").font(.caption2).foregroundStyle(Theme.hint)
+                        Text("(\(count))")
+                            .font(.atelierCaption)
+                            .foregroundStyle(Theme.hint)
                     }
+                    .padding(.top, 2)
                 }
             }
 
             Spacer(minLength: 0)
 
-            if !isSubscribed {
-                Image(systemName: "lock.fill")
-                    .font(.system(size: 13))
-                    .foregroundStyle(Theme.hint)
-            } else {
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(Theme.hint)
-            }
+            Image(systemName: isSubscribed ? "chevron.right" : "lock.fill")
+                .font(.system(size: 12))
+                .foregroundStyle(Theme.hint)
         }
         .padding(Metrics.cardPadding)
         .background(Theme.card)
-        .clipShape(RoundedRectangle(cornerRadius: Metrics.radiusCard))
-        .overlay(RoundedRectangle(cornerRadius: Metrics.radiusCard).stroke(Theme.separator, lineWidth: 0.5))
+        .clipShape(RoundedRectangle(cornerRadius: Metrics.radiusTile))
+        .overlay(
+            RoundedRectangle(cornerRadius: Metrics.radiusTile)
+                .stroke(Theme.separator, lineWidth: 0.5)
+        )
     }
 }

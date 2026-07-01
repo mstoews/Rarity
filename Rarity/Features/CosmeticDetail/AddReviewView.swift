@@ -45,7 +45,7 @@ struct AddReviewView: View {
                     }
                 }
                 if let err = errorMessage {
-                    Section { Text(err).foregroundStyle(Theme.systemRed).font(.footnote) }
+                    Section { Text(err).foregroundStyle(Theme.destructive).font(.footnote) }
                 }
             }
             .navigationTitle("Write a Review")

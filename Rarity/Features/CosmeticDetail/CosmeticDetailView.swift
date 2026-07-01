@@ -24,20 +24,6 @@ struct CosmeticDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    Task {
-                        if inWishlist { try? await session.api.removeFromWishlist(cosmeticID: cosmeticID) }
-                        else          { try? await session.api.addToWishlist(cosmeticID: cosmeticID) }
-                        inWishlist.toggle()
-                    }
-                } label: {
-                    Image(systemName: inWishlist ? "heart.fill" : "heart")
-                        .foregroundStyle(inWishlist ? Theme.wishlist : Theme.sub)
-                }
-            }
-        }
         .sheet(isPresented: $vm.showPaywall) {
             PaywallView { vm.showPaywall = false }
         }
@@ -54,72 +40,113 @@ struct CosmeticDetailView: View {
                 AsyncImage(url: d.imageURL.flatMap(URL.init)) { img in
                     img.resizable().scaledToFill()
                 } placeholder: {
-                    Rectangle().fill(Theme.card2)
-                        .overlay(Image(systemName: "sparkles").font(.largeTitle).foregroundStyle(Theme.hint))
+                    Theme.card2
+                        .overlay(
+                            Image(systemName: "sparkles")
+                                .font(.system(size: 40, weight: .light))
+                                .foregroundStyle(Theme.hint)
+                        )
                 }
                 .frame(maxWidth: .infinity).frame(height: 280)
                 .clipped()
 
                 VStack(alignment: .leading, spacing: 16) {
                     // Header
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 6) {
                         if let cat = d.category {
-                            Text(cat.name.uppercased())
-                                .font(.system(size: 11, weight: .semibold)).kerning(0.6)
-                                .foregroundStyle(Theme.brand)
+                            Text("\(d.brand) · \(cat.name)")
+                                .eyebrowStyle()
+                        } else {
+                            Text(d.brand).eyebrowStyle()
                         }
-                        Text(d.name).font(.title2.bold()).foregroundStyle(Theme.ink)
-                        Text(d.brand).font(.subheadline).foregroundStyle(Theme.sub)
+
+                        Text(d.name)
+                            .font(.atelierTitle)
+                            .foregroundStyle(Theme.ink)
+
                         if d.reviewCount > 0 {
-                            HStack(spacing: 6) {
+                            HStack(spacing: 8) {
                                 StarRatingView(rating: d.avgRating)
-                                Text(String(format: "%.1f", d.avgRating)).font(.subheadline.bold()).foregroundStyle(Theme.ink)
-                                Text("(\(d.reviewCount) reviews)").font(.footnote).foregroundStyle(Theme.hint)
+                                Text(String(format: "%.1f", d.avgRating))
+                                    .font(.cormorant(size: 17))
+                                    .foregroundStyle(Theme.ink)
+                                Text("\(d.reviewCount) reviews")
+                                    .font(.atelierCaption)
+                                    .foregroundStyle(Theme.hint)
                             }
                         }
                     }
 
-                    Divider().overlay(Theme.separator)
+                    Rectangle().fill(Theme.separator).frame(height: 0.5)
 
                     // Description
                     if let desc = d.description {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("About").font(.headline).foregroundStyle(Theme.ink)
-                            Text(desc).font(.body).foregroundStyle(Theme.sub)
+                            Text("About")
+                                .font(.jost(.semibold, size: 11))
+                                .tracking(2)
+                                .textCase(.uppercase)
+                                .foregroundStyle(Theme.sub)
+                            Text(desc)
+                                .font(.atelierBody)
+                                .foregroundStyle(Theme.sub)
+                                .lineSpacing(4)
                         }
                     }
 
                     // Ingredients
                     if let ing = d.ingredients {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text("Ingredients").font(.headline).foregroundStyle(Theme.ink)
-                            Text(ing).font(.footnote).foregroundStyle(Theme.sub)
+                            Text("Ingredients")
+                                .font(.jost(.semibold, size: 11))
+                                .tracking(2)
+                                .textCase(.uppercase)
+                                .foregroundStyle(Theme.sub)
+                            Text(ing)
+                                .font(.atelierCaption)
+                                .foregroundStyle(Theme.sub)
+                                .lineSpacing(3)
                         }
                     }
 
-                    Divider().overlay(Theme.separator)
+                    Rectangle().fill(Theme.separator).frame(height: 0.5)
 
-                    // Stores
+                    // Store locations
                     if !d.stores.isEmpty {
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("Where to find it").font(.headline).foregroundStyle(Theme.ink)
-                            ForEach(d.stores) { store in
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Where to find it")
+                                .font(.jost(.semibold, size: 11))
+                                .tracking(2)
+                                .textCase(.uppercase)
+                                .foregroundStyle(Theme.sub)
+                                .padding(.bottom, 12)
+
+                            ForEach(Array(d.stores.enumerated()), id: \.element.id) { i, store in
                                 NavigationLink(destination: StoreDetailView(storeID: store.id)) {
                                     StoreRowView(store: store)
                                 }
                                 .buttonStyle(.plain)
+
+                                if i < d.stores.count - 1 {
+                                    Rectangle().fill(Theme.separator).frame(height: 0.5)
+                                }
                             }
                         }
+
+                        Rectangle().fill(Theme.separator).frame(height: 0.5)
                     }
 
-                    Divider().overlay(Theme.separator)
-
-                    // Reviews header
+                    // Reviews
                     HStack {
-                        Text("Reviews").font(.headline).foregroundStyle(Theme.ink)
+                        Text("Reviews")
+                            .font(.jost(.semibold, size: 11))
+                            .tracking(2)
+                            .textCase(.uppercase)
+                            .foregroundStyle(Theme.sub)
                         Spacer()
                         Button("Write a Review") { showAddReview = true }
-                            .font(.subheadline).foregroundStyle(Theme.brand)
+                            .font(.jost(size: 13))
+                            .foregroundStyle(Theme.brand)
                     }
 
                     ReviewsView(cosmeticID: cosmeticID, api: session.api)
@@ -129,6 +156,34 @@ struct CosmeticDetailView: View {
         }
         .background(Theme.page.ignoresSafeArea())
         .navigationTitle(d.name)
+        .safeAreaInset(edge: .bottom) {
+            wishlistCTA
+        }
+    }
+
+    private var wishlistCTA: some View {
+        Button {
+            Task {
+                if inWishlist { try? await session.api.removeFromWishlist(cosmeticID: cosmeticID) }
+                else          { try? await session.api.addToWishlist(cosmeticID: cosmeticID) }
+                inWishlist.toggle()
+            }
+        } label: {
+            Text(inWishlist ? "Saved" : "Save")
+                .primaryButtonLabel()
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .foregroundStyle(inWishlist ? Theme.brand : .white)
+                .background(inWishlist ? Theme.brandSoft : Theme.ink)
+                .clipShape(RoundedRectangle(cornerRadius: Metrics.radiusButton))
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, Metrics.page)
+        .padding(.vertical, 14)
+        .background(Theme.page.opacity(0.96))
+        .overlay(alignment: .top) {
+            Rectangle().fill(Theme.separator).frame(height: 0.5)
+        }
     }
 }
 
@@ -137,25 +192,29 @@ struct StoreRowView: View {
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "mappin.circle.fill")
-                .font(.system(size: 22)).foregroundStyle(Theme.brand)
+                .font(.system(size: 20))
+                .foregroundStyle(Theme.brand)
             VStack(alignment: .leading, spacing: 2) {
-                Text(store.name).font(.subheadline.bold()).foregroundStyle(Theme.ink)
+                Text(store.name)
+                    .font(.atelierCardName)
+                    .foregroundStyle(Theme.ink)
                 if let city = store.city {
-                    Text(city).font(.footnote).foregroundStyle(Theme.sub)
+                    Text(city).font(.atelierCaption).foregroundStyle(Theme.sub)
                 }
                 if let notes = store.notes {
-                    Text(notes).font(.caption).foregroundStyle(Theme.hint)
+                    Text(notes).font(.atelierCaption).foregroundStyle(Theme.hint)
                 }
             }
             Spacer()
             if store.inStock == false {
-                Text("Out of stock").font(.caption).foregroundStyle(Theme.systemRed)
+                Text("Out of stock")
+                    .font(.atelierCaption)
+                    .foregroundStyle(Theme.destructive)
             }
-            Image(systemName: "chevron.right").font(.caption).foregroundStyle(Theme.hint)
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundStyle(Theme.hint)
         }
-        .padding(12)
-        .background(Theme.card)
-        .clipShape(RoundedRectangle(cornerRadius: Metrics.radiusRow))
-        .overlay(RoundedRectangle(cornerRadius: Metrics.radiusRow).stroke(Theme.separator, lineWidth: 0.5))
+        .padding(.vertical, 14)
     }
 }

@@ -37,15 +37,19 @@ struct WishlistView: View {
                 } else if vm.isLoading && vm.cosmetics.isEmpty {
                     ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if vm.cosmetics.isEmpty {
-                    ContentUnavailableView("Your wishlist is empty",
-                                           systemImage: "heart.slash",
-                                           description: Text("Save cosmetics you love to revisit later."))
+                    ContentUnavailableView(
+                        "Your wishlist is empty",
+                        systemImage: "heart.slash",
+                        description: Text("Save cosmetics you love to revisit later.")
+                    )
                 } else {
                     List {
                         ForEach(vm.cosmetics) { cosmetic in
                             NavigationLink(destination: CosmeticDetailView(cosmeticID: cosmetic.id)) {
                                 CosmeticCardView(cosmetic: cosmetic, isSubscribed: true)
-                                    .listRowInsets(.init(top: 4, leading: Metrics.page, bottom: 4, trailing: Metrics.page))
+                                    .listRowInsets(
+                                        .init(top: 6, leading: Metrics.page, bottom: 6, trailing: Metrics.page)
+                                    )
                             }
                             .buttonStyle(.plain)
                         }
@@ -73,14 +77,33 @@ struct WishlistView: View {
 
     private var paywallPrompt: some View {
         VStack(spacing: 24) {
-            Image(systemName: "heart.circle.fill")
-                .font(.system(size: 60)).foregroundStyle(Theme.wishlist)
-            Text("Unlock Wishlist").font(.title2.bold()).foregroundStyle(Theme.ink)
-            Text("Save cosmetics and get full store locations with Rarity+")
-                .font(.subheadline).foregroundStyle(Theme.sub).multilineTextAlignment(.center)
-                .padding(.horizontal, 40)
+            Circle()
+                .strokeBorder(Theme.separator, lineWidth: 1)
+                .frame(width: 72, height: 72)
+                .overlay(
+                    Image(systemName: "heart")
+                        .font(.system(size: 28, weight: .light))
+                        .foregroundStyle(Theme.brand)
+                )
+
+            VStack(spacing: 8) {
+                Text("Unlock Wishlist")
+                    .font(.cormorant(size: 30))
+                    .foregroundStyle(Theme.ink)
+                Text("Save cosmetics and get full store locations with Rarity+")
+                    .font(.atelierBody)
+                    .foregroundStyle(Theme.sub)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
+            }
+
             Button("Get Rarity+") { showPaywall = true }
-                .buttonStyle(.borderedProminent).tint(Theme.brand)
+                .primaryButtonLabel()
+                .padding(.horizontal, 32)
+                .padding(.vertical, 14)
+                .foregroundStyle(.white)
+                .background(Theme.ink)
+                .clipShape(RoundedRectangle(cornerRadius: Metrics.radiusButton))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
