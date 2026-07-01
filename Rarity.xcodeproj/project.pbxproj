@@ -13,6 +13,7 @@
 		2C89D2B8DE1BD7874B72244C /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B2CF637ADB20C8A8DB276 /* APIClient.swift */; };
 		2EDA9A7C945CAF367E7D42A2 /* StoresView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD09232912A6C54F3077AEA /* StoresView.swift */; };
 		324A1AFE011FAFEF9D1DCDAB /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C1585D83596720602524FB5 /* PaywallView.swift */; };
+		3814F8E70EF4415DB2775546 /* CosmeticGridCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1508C7B470E4329F8B71CC72 /* CosmeticGridCard.swift */; };
 		4335E9AF072DE40AE3627D9A /* RarityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F897A88A838F28F3D929300 /* RarityApp.swift */; };
 		4F0A7D32755434E7EE34B7DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ABE2361CAA4E823A1683B484 /* Assets.xcassets */; };
 		5B8C25E11303022B16E0D4CA /* WishlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CCCC878167F772BFDD4EC48 /* WishlistView.swift */; };
@@ -25,6 +26,7 @@
 		936A728223990504A6DBCFF5 /* ReviewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24ECBF15E72CF5C4453D771D /* ReviewsView.swift */; };
 		976F3D470E178F0E8321B41B /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE73A3E8488C683E126D060 /* SubscriptionManager.swift */; };
 		97C0F08FD7A7BA2F9DB605E9 /* CosmeticDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81251EFBD6F1BCD50DF59113 /* CosmeticDetailView.swift */; };
+		A078ADD95CB22D0F2B25B715 /* Font+Atelier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09707710B7D7C7B6BC13817F /* Font+Atelier.swift */; };
 		A621F4FE872653D8666088EE /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB510FF52EC828C2D9523308 /* Theme.swift */; };
 		AB9939B056F9C6566D0D7975 /* CosmeticDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 689FE9AC59A57259456B868A /* CosmeticDetailViewModel.swift */; };
 		AD8ECC7D926F8E0692E02BC1 /* AddReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB90A8F396579BE3F8316A9 /* AddReviewView.swift */; };
@@ -59,9 +61,11 @@
 /* Begin PBXFileReference section */
 		060946D330879745FEF7299A /* Rarity.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Rarity.entitlements; sourceTree = "<group>"; };
 		06DB3F0238BEBC5D37C0F1D8 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		09707710B7D7C7B6BC13817F /* Font+Atelier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Atelier.swift"; sourceTree = "<group>"; };
 		0AD297C57A8BF4E583045CA4 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		0BB9FEA6E5F3C9B6333E714A /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		117AF1C9D7CC68C8FB82F7D5 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		1508C7B470E4329F8B71CC72 /* CosmeticGridCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CosmeticGridCard.swift; sourceTree = "<group>"; };
 		1E5B2CF637ADB20C8A8DB276 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		24ECBF15E72CF5C4453D771D /* ReviewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsView.swift; sourceTree = "<group>"; };
 		25D477D212406889C6F92D92 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
@@ -100,6 +104,7 @@
 			children = (
 				7CBA6FE160051EA075C3B5F3 /* CategoryChips.swift */,
 				3044E191333013034E3F3573 /* CosmeticCardView.swift */,
+				1508C7B470E4329F8B71CC72 /* CosmeticGridCard.swift */,
 				A8E15D55AEB4B97988FBC633 /* StarRatingView.swift */,
 			);
 			path = Components;
@@ -200,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				C1EBEB77A8CA54222ABB2EA5 /* Color+Hex.swift */,
+				09707710B7D7C7B6BC13817F /* Font+Atelier.swift */,
 				AB510FF52EC828C2D9523308 /* Theme.swift */,
 			);
 			path = DesignSystem;
@@ -421,6 +427,8 @@
 				DE8D6664E0824541B1745A82 /* CosmeticCardView.swift in Sources */,
 				97C0F08FD7A7BA2F9DB605E9 /* CosmeticDetailView.swift in Sources */,
 				AB9939B056F9C6566D0D7975 /* CosmeticDetailViewModel.swift in Sources */,
+				3814F8E70EF4415DB2775546 /* CosmeticGridCard.swift in Sources */,
+				A078ADD95CB22D0F2B25B715 /* Font+Atelier.swift in Sources */,
 				8FA28E13157C6572B851E543 /* KeychainStore.swift in Sources */,
 				AF61ABB6F4188F280198004F /* MainTabView.swift in Sources */,
 				D78BC26D96D3286A7E8EFA57 /* Models.swift in Sources */,

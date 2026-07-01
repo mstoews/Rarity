@@ -25,8 +25,10 @@ struct StoresView: View {
 
     private var filtered: [StoreCard] {
         guard !searchQuery.isEmpty else { return vm.stores }
-        return vm.stores.filter { $0.name.localizedCaseInsensitiveContains(searchQuery) ||
-            ($0.city ?? "").localizedCaseInsensitiveContains(searchQuery) }
+        return vm.stores.filter {
+            $0.name.localizedCaseInsensitiveContains(searchQuery) ||
+            ($0.city ?? "").localizedCaseInsensitiveContains(searchQuery)
+        }
     }
 
     var body: some View {
@@ -39,9 +41,11 @@ struct StoresView: View {
                 } else if filtered.isEmpty {
                     ContentUnavailableView.search(text: searchQuery)
                 } else {
-                    List(filtered) { store in
-                        NavigationLink(destination: StoreDetailView(storeID: store.id)) {
-                            StoreListRow(store: store)
+                    List {
+                        ForEach(filtered) { store in
+                            NavigationLink(destination: StoreDetailView(storeID: store.id)) {
+                                StoreListRow(store: store)
+                            }
                         }
                     }
                     .listStyle(.plain)
@@ -60,13 +64,25 @@ struct StoresView: View {
 private struct StoreListRow: View {
     let store: StoreCard
     var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "mappin.circle.fill").font(.system(size: 28)).foregroundStyle(Theme.brand)
+        HStack(spacing: 14) {
+            Image(systemName: "mappin.circle.fill")
+                .font(.system(size: 22))
+                .foregroundStyle(Theme.brand)
             VStack(alignment: .leading, spacing: 2) {
-                Text(store.name).font(.subheadline.bold()).foregroundStyle(Theme.ink)
-                if let city = store.city { Text(city).font(.footnote).foregroundStyle(Theme.sub) }
+                Text(store.name)
+                    .font(.atelierCardName)
+                    .foregroundStyle(Theme.ink)
+                if let city = store.city {
+                    Text(city)
+                        .font(.atelierCaption)
+                        .foregroundStyle(Theme.sub)
+                }
             }
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.caption)
+                .foregroundStyle(Theme.hint)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
     }
 }
